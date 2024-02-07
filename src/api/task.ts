@@ -1,6 +1,6 @@
-import { Task } from "@/interfaces/Task";
 import { AxiosResponse } from "axios";
 import axios from "./axios";
+import { Task } from "@/interface/Task";
 
 export const getTasks = async (): Promise<AxiosResponse<Task[]>> =>
   await axios.get("/tasks");
