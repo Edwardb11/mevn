@@ -1,47 +1,72 @@
 <template>
-    <form @submit.prevent="handleUpdate()">
-        <input type="text" placeholder="Write a title" v-model="currentTask.title">
-        <textarea placeholder="Write a description" v-model="currentTask.description"></textarea>
-        <button>Update task</button>
-    </form>
-    <button @click="handleDelete()">Delet task</button>
-</template>
-
-<script lang="ts">
-import { deleteTask, getTask, updateTask } from '@/api/task';
-import { Task } from '@/interface/Task';
-import { defineComponent } from 'vue';
-
-export default defineComponent({
+    <div class="col-md-4 offset-md-4">
+      <form @submit.prevent="handleUpdate()" class="card card-body">
+        <h1 class="card-title my-3 text-center">Update a Task</h1>
+  
+        <input
+          type="text"
+          v-model="currentTask.title"
+          class="form-control mb-3"
+        />
+  
+        <textarea
+          v-model="currentTask.description"
+          class="form-control mb-3"
+        ></textarea>
+  
+        <button class="btn btn-primary">Update</button>
+      </form>
+  
+      <button @click="handleDelete()" class="btn btn-danger my-4">delete</button>
+    </div>
+  </template>
+  
+  <script lang="ts">
+  import { deleteTask, getTask, updateTask } from "@/api/task";
+import { Task } from "@/interface/Task";
+import { defineComponent } from "vue";
+  
+  export default defineComponent({
+    name: "tasks-details",
     data() {
-        return {
-            currentTask: {} as Task
-        }
+      return {
+        currentTask: {} as Task,
+      };
     },
     methods: {
-        async loadTask(id: string) {
-            const res = await getTask(id);
-            this.currentTask = res.data;
-        },
-
-        async handleUpdate() {
-            if (typeof this.$route.params.id === "string") {
-              await updateTask(this.$route.params.id, this.currentTask);
-                this.$router.push({ name: 'task' });
-            }
-        },
-        async handleDelete() {
-            if (typeof this.$route.params.id === "string") {
-              await deleteTask(this.$route.params.id);
-                this.$router.push({ name: 'task' });
-            }
+      async loadTask(id: string) {
+        try {
+          const { data } = await getTask(id);
+          this.currentTask = data;
+        } catch (error) {
+          console.error(error);
         }
+      },
+      async handleUpdate() {
+        try {
+          if (typeof this.$route.params.id === "string") {
+            await updateTask(this.$route.params.id, this.currentTask);
+            this.$router.push("/");
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      },
+      async handleDelete() {
+        try {
+          if (typeof this.$route.params.id === "string") {
+            deleteTask(this.$route.params.id);
+            this.$router.push("/");
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      },
     },
     mounted() {
-        if (typeof this.$route.params.id === "string") {
-            this.loadTask(this.$route.params.id);
-        }
+      if (typeof this.$route.params.id === "string") {
+        this.loadTask(this.$route.params.id);
+      }
     },
-
-});
-</script>
+  });
+  </script>
