@@ -21,6 +21,7 @@ import { createTask } from '@/api/task';
    async   saveTask() {
     const res = await createTask(this.task);
     console.log(res);
+    this.$router.push({ name: 'task' });
       }
     },
   });
