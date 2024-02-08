@@ -1,38 +1,43 @@
 <template>
-<ul>
-    <li
-      class="list-group-item list-group-item-action p-4"
-      style="cursor: pointer"
-      v-for="(task, index) in tasks"
-      :key="index"
-      @click="this.$router.push(`/task/${task._id}`)"
-    >
-        <h2>{{ task.title }}</h2>
-        <p>{{ task.description }}</p>
-    </li>
-</ul>
-</template>
+    <ul class="list-group">
+      <li
+        class="list-group-item list-group-item-action p-4"
+        style="cursor: pointer"
+        v-for="(task, index) in tasks"
+        :key="index"
+        @click="this.$router.push(`/task/${task._id}`)"
+      >
+        {{ index + 1 }}.
+        {{ task.title }}
+      </li>
+    </ul>
+  </template>
+  
+  <script lang="ts">
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { Task } from '@/interface/Task';
-import { getTasks } from '@/api/task';
-
-export default defineComponent({
+  import { getTasks } from "@/api/task";
+import { Task } from "@/interface/Task";
+import { defineComponent } from "vue";
+  
+  export default defineComponent({
+    name: "tasks-list",
     data() {
-        return {
-            tasks: [] as Task[]
-        }
+      return {
+        tasks: [] as Task[],
+      };
     },
-methods: {
-    async loadTaks() {
-        const res = await getTasks();
-        this.tasks = res.data;
-    }
-},
-mounted() {
-    this.loadTaks();
-}
-
-});
-</script>
+    methods: {
+      async loadTasks() {
+        try {
+          const res = await getTasks();
+          this.tasks = res.data;
+        } catch (error) {
+          console.error(error);
+        }
+      },
+    },
+    mounted() {
+      this.loadTasks();
+    },
+  });
+  </script>

@@ -26,14 +26,14 @@ export default defineComponent({
 
         async handleUpdate() {
             if (typeof this.$route.params.id === "string") {
-                const res = await updateTask(this.$route.params.id, this.currentTask);
-                console.log(res)
+              await updateTask(this.$route.params.id, this.currentTask);
+                this.$router.push({ name: 'task' });
             }
         },
         async handleDelete() {
             if (typeof this.$route.params.id === "string") {
-                const res = await deleteTask(this.$route.params.id);
-                console.log(res)
+              await deleteTask(this.$route.params.id);
+                this.$router.push({ name: 'task' });
             }
         }
     },
