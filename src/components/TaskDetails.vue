@@ -1,12 +1,14 @@
 <template>
-    <form>
-      <input type="text" placeholder="Write a title" v-model="currentTask.title">
-      <textarea placeholder="Write a description" v-model="currentTask.description"></textarea>
+    <form @submit.prevent="handleUpdate()">
+        <input type="text" placeholder="Write a title" v-model="currentTask.title">
+        <textarea placeholder="Write a description" v-model="currentTask.description"></textarea>
+        <button>Update task</button>
     </form>
+    <button @click="handleDelete()">Delet task</button>
 </template>
 
 <script lang="ts">
-import { getTask } from '@/api/task';
+import { deleteTask, getTask, updateTask } from '@/api/task';
 import { Task } from '@/interface/Task';
 import { defineComponent } from 'vue';
 
@@ -17,16 +19,29 @@ export default defineComponent({
         }
     },
     methods: {
-     async   loadTask(id: string) {
-        const res =   await getTask(id);
-this.currentTask = res.data;
+        async loadTask(id: string) {
+            const res = await getTask(id);
+            this.currentTask = res.data;
+        },
+
+        async handleUpdate() {
+            if (typeof this.$route.params.id === "string") {
+                const res = await updateTask(this.$route.params.id, this.currentTask);
+                console.log(res)
+            }
+        },
+        async handleDelete() {
+            if (typeof this.$route.params.id === "string") {
+                const res = await deleteTask(this.$route.params.id);
+                console.log(res)
+            }
         }
     },
     mounted() {
-    if (typeof this.$route.params.id === "string") {
-      this.loadTask(this.$route.params.id);
-    }
-  },
-  
+        if (typeof this.$route.params.id === "string") {
+            this.loadTask(this.$route.params.id);
+        }
+    },
+
 });
 </script>
